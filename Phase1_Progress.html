@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kasetchon ERP Phase 1 Progress</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: project header → KPI strip → week-by-week tracker → 2-week sprint Gantt → sprint cards → milestones & payment schedule */
+:root{
+  --bg:#F5F7FB; --surface:#FFFFFF; --surface-2:#EEF2F8; --line:#DCE3EE;
+  --fg:#16233B; --muted:#5C6A82; --navy:#1F3864; --navy-ink:#FFFFFF;
+  --m01:#2B7A86; --m02:#B4741C; --m09:#5A4BB0; --mx:#4A5A78;
+  --ok:#2E8B57; --ok-bg:#E3F3EA; --prog:#2463B5; --prog-bg:#E2ECFA;
+  --warn:#B7791F; --warn-bg:#FBF0DC; --late:#C2412D; --late-bg:#FBE5E1;
+  --idle:#7A869C; --idle-bg:#EDF0F5; --rev:#7B4FB8; --rev-bg:#EFE7FA;
+  --today:#D23C2A;
+  --f-display:"Anuphan","IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --surface:#161E2E; --surface-2:#1C2639; --line:#2A3650;
+  --fg:#E5EAF3; --muted:#9AA7BE; --navy:#8FB0E8; --navy-ink:#0F1522;
+  --m01:#4FB3BF; --m02:#E0A24A; --m09:#9A8CF0; --mx:#8C9BB8;
+  --ok:#5CC48A; --ok-bg:#16301F; --prog:#6FA6F0; --prog-bg:#172840; --warn:#E5AE55; --warn-bg:#33270F;
+  --late:#F07A66; --late-bg:#3A1C17; --idle:#8D98AD; --idle-bg:#1F283A; --rev:#B48CF0; --rev-bg:#2A1F40;
+  --today:#FF6B57; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1522; --surface:#161E2E; --surface-2:#1C2639; --line:#2A3650;
+  --fg:#E5EAF3; --muted:#9AA7BE; --navy:#8FB0E8; --navy-ink:#0F1522;
+  --m01:#4FB3BF; --m02:#E0A24A; --m09:#9A8CF0; --mx:#8C9BB8;
+  --ok:#5CC48A; --ok-bg:#16301F; --prog:#6FA6F0; --prog-bg:#172840; --warn:#E5AE55; --warn-bg:#33270F;
+  --late:#F07A66; --late-bg:#3A1C17; --idle:#8D98AD; --idle-bg:#1F283A; --rev:#B48CF0; --rev-bg:#2A1F40;
+  --today:#FF6B57; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:36px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:700;color:var(--navy)}
+h2{font-size:1.3rem;font-weight:600}
+h3{font-size:1.02rem;font-weight:600}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+section{display:grid;gap:14px;min-width:0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px}
+.sec-head p{margin:0;color:var(--muted);font-size:.88rem}
+
+/* header */
+header{display:grid;gap:14px;border-bottom:2px solid var(--navy);padding-bottom:20px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 28px;font-size:.88rem;color:var(--muted)}
+.meta b{color:var(--fg);font-weight:500}
+.notice{background:var(--surface-2);border-left:3px solid var(--navy);padding:10px 14px;font-size:.88rem;border-radius:0 6px 6px 0}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:4px;min-width:0}
+.kpi .v{font-family:var(--f-mono);font-size:1.6rem;font-weight:500;line-height:1.2}
+.kpi .s{font-size:.82rem;color:var(--muted)}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--navy)}
+.bar u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--fg);opacity:.55}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px}
+.mod .row{display:flex;justify-content:space-between;gap:8px;font-size:.85rem}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:baseline}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.k-ok{color:var(--ok);background:var(--ok-bg)} .k-prog{color:var(--prog);background:var(--prog-bg)}
+.k-warn{color:var(--warn);background:var(--warn-bg)} .k-late{color:var(--late);background:var(--late-bg)}
+.k-idle{color:var(--idle);background:var(--idle-bg)} .k-rev{color:var(--rev);background:var(--rev-bg)}
+
+/* weekly */
+.week{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.week-nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.week-nav .ctl{display:flex;gap:8px;align-items:center}
+button,select{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover,select:hover{border-color:var(--navy)}
+button:focus-visible,select:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+button.primary{background:var(--navy);color:var(--navy-ink);border-color:var(--navy)}
+.week-title{font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+.week-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0}
+.wcol{padding:16px;display:grid;gap:10px;align-content:start;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0}
+.wcol h3{font-size:.92rem;color:var(--muted);font-weight:600}
+.witem{display:grid;gap:5px;font-size:.88rem}
+.witem .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.witem .nm{min-width:0}
+.witem .code{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.dual{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;font-size:.75rem;color:var(--muted)}
+.empty{font-size:.86rem;color:var(--muted);font-style:italic}
+ul.notes{margin:0;padding-left:1.1em;font-size:.88rem;display:grid;gap:3px}
+
+/* gantt */
+.gscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.gantt{--label:250px;min-width:1000px;position:relative;font-size:.8rem}
+.grow{display:grid;grid-template-columns:var(--label) 1fr;border-bottom:1px solid var(--line);min-height:32px}
+.grow:last-child{border-bottom:0}
+.glabel{padding:6px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid var(--line);min-width:0;line-height:1.3}
+.glabel span{overflow:hidden;text-overflow:ellipsis}
+.gtrack{position:relative}
+.ghead .gtrack{display:grid}
+.gsprint{border-left:1px solid var(--line);padding:6px 6px;font-weight:600;text-align:center;font-family:var(--f-display);line-height:1.25}
+.gsprint small{display:block;font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:.68rem}
+.gsprint.cur{background:var(--prog-bg);color:var(--prog)}
+.gweek{border-left:1px solid var(--line);text-align:center;color:var(--muted);font-family:var(--f-mono);font-size:.68rem;padding:3px 0}
+.ggroup{background:var(--surface-2);font-family:var(--f-display);font-weight:600}
+.ggroup .glabel{border-right:0}
+.gbar{position:absolute;top:7px;height:18px;border-radius:4px;overflow:hidden;background:color-mix(in srgb,var(--c) 28%,transparent)}
+.gbar i{position:absolute;inset:0 auto 0 0;background:var(--c)}
+.grev{position:absolute;top:11px;height:10px;border-radius:3px;border:1px dashed var(--rev);background:repeating-linear-gradient(135deg,var(--rev-bg) 0 4px,transparent 4px 8px)}
+.gms{position:absolute;top:8px;width:14px;height:14px;transform:translateX(-50%) rotate(45deg);background:var(--navy);border:2px solid var(--surface)}
+.gms.done{background:var(--ok)}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--today);left:calc(var(--label) + (100% - var(--label)) * var(--p));pointer-events:none;z-index:2}
+.gtoday b{position:absolute;top:2px;left:4px;background:var(--today);color:#fff;font-size:.66rem;padding:0 5px;border-radius:3px;white-space:nowrap;font-weight:600}
+.gridlines{position:absolute;top:0;bottom:0;left:var(--label);right:0;display:grid;pointer-events:none}
+.gridlines div{border-left:1px dashed var(--line)}
+.gridlines div.sp{border-left:1px solid var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.8rem;color:var(--muted);align-items:center}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.lg .sw{width:22px;height:10px;border-radius:3px;display:inline-block}
+
+/* sprint cards */
+.sprints{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sp-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0}
+.sp-card.cur{border-color:var(--prog);box-shadow:0 0 0 1px var(--prog)}
+.sp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sp-no{font-family:var(--f-display);font-weight:700;font-size:1.15rem;color:var(--navy)}
+.sp-dates{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.sp-goal{font-size:.9rem;margin:0}
+.sp-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:.84rem}
+.sp-list li{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;border-top:1px solid var(--line);padding-top:6px}
+.sp-list li span:first-child{min-width:0}
+.tag{font-size:.72rem;font-weight:600;color:var(--navy);border:1px solid var(--navy);border-radius:4px;padding:0 6px;white-space:nowrap}
+
+/* table */
+.tscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{white-space:nowrap}
+.was{text-decoration:line-through;color:var(--muted);font-size:.76rem;display:block}
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;display:grid;gap:4px}
+@media (max-width:560px){.kpi .v{font-size:1.35rem}.wcol{border-right:0}}
+@media (prefers-reduced-motion:no-preference){.bar i,.gbar i{transition:width .5s ease}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">KSCERP-2026-001 · Phase 1 Project Timeline</div>
+    <h1>Kasetchon ERP Platform — Phase 1</h1>
+    <div class="meta">
+      <span>ลูกค้า <b>บริษัท เกษตรชล 2559 จำกัด</b></span>
+      <span>ผู้พัฒนา <b>บริษัท เอ แอนด์ พี อินโนเวท จำกัด</b></span>
+      <span>ขอบเขต <b>M01 คลังสินค้า · M02 ผลิต · M09 ขาย-ขนส่ง</b></span>
+      <span>วันนี้ <b id="todayTxt" class="num">—</b></span>
+      <span>อัปเดตข้อมูลล่าสุด <b id="updatedTxt" class="num">—</b></span>
+    </div>
+    <div class="notice">เริ่มพัฒนา (Development) <b>15 ต.ค. 2569</b> เลื่อนจากแผนเดิม 1 ต.ค. 2569 จำนวน 14 วัน กำหนดการและ Milestone หลังจากนี้ทั้งหมดเลื่อนตาม 14 วัน โดยคงระยะเวลาแต่ละช่วงไว้เท่าเดิม แบ่งงานเป็น Sprint ละ 2 สัปดาห์ (พฤหัสบดี – พุธ)</div>
+  </header>
+
+  <section aria-labelledby="h-sum">
+    <div class="sec-head"><h2 id="h-sum">ภาพรวมความคืบหน้า</h2><p>แผน (Planned) คำนวณอัตโนมัติตามวันที่ปัจจุบัน · ผลจริง (Actual) อัปเดตโดยทีมพัฒนาทุกสัปดาห์</p></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="mods" id="mods"></div>
+  </section>
+
+  <section aria-labelledby="h-week">
+    <div class="sec-head"><h2 id="h-week">ความคืบหน้ารายสัปดาห์</h2><p>เลือกสัปดาห์เพื่อดูงานที่กำลังพัฒนา งานที่ส่งมอบ และงานที่รอลูกค้าตรวจสอบ</p></div>
+    <div class="week">
+      <div class="week-nav">
+        <div class="week-title" id="weekTitle">—</div>
+        <div class="ctl">
+          <button type="button" id="prevW" aria-label="สัปดาห์ก่อนหน้า">‹</button>
+          <select id="weekSel" aria-label="เลือกสัปดาห์"></select>
+          <button type="button" id="nextW" aria-label="สัปดาห์ถัดไป">›</button>
+          <button type="button" id="thisW" class="primary">สัปดาห์นี้</button>
+        </div>
+      </div>
+      <div class="week-body" id="weekBody"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-gantt">
+    <div class="sec-head"><h2 id="h-gantt">Timeline ตาม Sprint</h2><p>เลื่อนแนวนอนเพื่อดูทั้งหมด</p></div>
+    <div class="legend">
+      <span class="lg"><span class="sw" style="background:var(--m01)"></span>M01 คลังสินค้า</span>
+      <span class="lg"><span class="sw" style="background:var(--m02)"></span>M02 ผลิต</span>
+      <span class="lg"><span class="sw" style="background:var(--m09)"></span>M09 ขาย-ขนส่ง</span>
+      <span class="lg"><span class="sw" style="background:var(--mx)"></span>Foundation / ทดสอบ / Go-Live</span>
+      <span class="lg"><span class="sw" style="border:1px dashed var(--rev);background:var(--rev-bg)"></span>ช่วงลูกค้าตรวจสอบ</span>
+      <span class="lg"><span class="sw" style="width:12px;height:12px;transform:rotate(45deg);background:var(--navy)"></span>Milestone</span>
+      <span class="lg"><span class="sw" style="width:3px;height:14px;background:var(--today)"></span>วันนี้</span>
+    </div>
+    <div class="gscroll"><div class="gantt" id="gantt"></div></div>
+  </section>
+
+  <section aria-labelledby="h-sprint">
+    <div class="sec-head"><h2 id="h-sprint">รายละเอียด Sprint</h2><p>Sprint ละ 2 สัปดาห์ · รวม 11 Sprint (Sprint สุดท้าย 1 สัปดาห์)</p></div>
+    <div class="sprints" id="sprints"></div>
+  </section>
+
+  <section aria-labelledby="h-ms">
+    <div class="sec-head"><h2 id="h-ms">Milestone และงวดการชำระเงิน</h2><p>อ้างอิงสัญญาข้อ 4.8 และข้อ 6 ปรับวันตามวันเริ่มพัฒนาใหม่</p></div>
+    <div class="tscroll"><table id="msTable"></table></div>
+  </section>
+
+  <footer>
+    <span>อ้างอิง: KSCERP-2026-001-FRS (Phase 1) v1.4 · สัญญาจ้างพัฒนาระบบ Phase 1 · Task Breakdown Phase 1</span>
+    <span>การเปลี่ยนแปลง Requirement หลัง FRS Sign-off ดำเนินการผ่านกระบวนการ Change Request ซึ่งอาจส่งผลต่อกำหนดการ · ระยะประกัน 6 เดือนนับจากวัน Go-Live</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   ส่วนข้อมูลสำหรับ PM — อัปเดตทุกสัปดาห์
+   1) LAST_UPDATED  : วันที่อัปเดตข้อมูล (YYYY-MM-DD, ค.ศ.)
+   2) PROGRESS      : % ความคืบหน้าจริงของแต่ละงาน (0–100), accepted:true เมื่อลูกค้าตรวจรับแล้ว
+   3) MS_DONE       : รหัส Milestone ที่บรรลุแล้ว
+   4) WEEKLY        : บันทึกรายสัปดาห์ (สัปดาห์ที่ 1 = 15–21 ต.ค. 2569)
+   ============================================================ */
+const LAST_UPDATED = "2026-10-14";
+
+const PROGRESS = {
+  "F":      {pct:0}, "M01-01":{pct:0}, "M01-02":{pct:0}, "M01-03":{pct:0}, "M01-04":{pct:0}, "M01-R":{pct:0},
+  "M02-01": {pct:0}, "M02-02":{pct:0}, "M02-03":{pct:0}, "M02-R": {pct:0},
+  "M09-01": {pct:0}, "M09-01X":{pct:0}, "M09-02":{pct:0}, "M09-03":{pct:0}, "M09-04":{pct:0}, "M09-05":{pct:0}, "M09-R":{pct:0},
+  "SIT":{pct:0}, "UAT":{pct:0}, "TRN":{pct:0}, "GL":{pct:0}, "HC":{pct:0}
+};
+
+const MS_DONE = ["MS-0","MS-1","MS-2"];
+
+const WEEKLY = {
+  // ตัวอย่างรูปแบบ:
+  // 1: { done:["ตั้งค่า Project skeleton และ CI/CD"], next:["API สถานะช่องโหลด"], issues:[], customer:["ยืนยันจำนวนช่องโหลด 9 ช่อง"] },
+};
+
+/* ============================ แผนงาน (อ้างอิงสัญญา ข้อ 6 เลื่อน +14 วัน) ============================ */
+const PROJECT = {start:"2026-10-15", end:"2027-03-10"};
+
+const SPRINTS = [
+  {no:1,  s:"2026-10-15", e:"2026-10-28", goal:"วางโครงสร้างระบบ (Foundation) และเริ่ม M01 Dashboard ช่องโหลด"},
+  {no:2,  s:"2026-10-29", e:"2026-11-11", goal:"M01 คลัง In-process / Frozen และ M02 Production Plan"},
+  {no:3,  s:"2026-11-12", e:"2026-11-25", goal:"ปิดงานพัฒนา M01 (Dead Stock, Reports) · M02 บันทึก Actual · M09 Sale Order"},
+  {no:4,  s:"2026-11-26", e:"2026-12-09", goal:"M02 Plan vs Actual Dashboard · M09 สั่งสินค้าผ่านลิงก์ไลน์กลุ่ม"},
+  {no:5,  s:"2026-12-10", e:"2026-12-23", goal:"ปิดงานพัฒนา M02 (BOM, Reports) · M09 Pick/Pack/Load และสรุปยอดขาย"},
+  {no:6,  s:"2026-12-24", e:"2027-01-06", goal:"ปิดงานพัฒนา M09 (คิวรับสินค้า, Trip, Reports)", note:"มีวันหยุดปีใหม่ 31 ธ.ค. – 1 ม.ค."},
+  {no:7,  s:"2027-01-07", e:"2027-01-20", goal:"SIT ทดสอบการเชื่อมต่อ 3 โมดูล และแก้ไข Bug รอบ 1"},
+  {no:8,  s:"2027-01-21", e:"2027-02-03", goal:"UAT ร่วมกับ Key User และแก้ไข Bug รอบ 2"},
+  {no:9,  s:"2027-02-04", e:"2027-02-17", goal:"อบรมผู้ใช้งานทุกฝ่าย และนำเข้าข้อมูลตั้งต้น (Data Migration)"},
+  {no:10, s:"2027-02-18", e:"2027-03-03", goal:"Go-Live Cutover (24 ก.พ. 2570) และ Hypercare สัปดาห์ที่ 1"},
+  {no:11, s:"2027-03-04", e:"2027-03-10", goal:"Hypercare สัปดาห์ที่ 2 และปิดโครงการ Phase 1", note:"Sprint 1 สัปดาห์"}
+];
+
+const GROUPS = [
+  {key:"F",   name:"Foundation", color:"--mx"},
+  {key:"M01", name:"M01 คลังสินค้า (Warehouse)", color:"--m01"},
+  {key:"M02", name:"M02 ผลิต (Production)", color:"--m02"},
+  {key:"M09", name:"M09 ขาย-ขนส่ง (Sales & Logistics)", color:"--m09"},
+  {key:"X",   name:"ทดสอบ · Go-Live · Hypercare", color:"--mx"}
+];
+
+const TASKS = [
+  {id:"F", g:"F", code:"F-01–F-07", name:"Foundation: Project setup, CI/CD, Auth/RBAC, Design System, Master Data, Audit Trail, Import tool", s:"2026-10-15", e:"2026-10-28", w:44},
+
+  {id:"M01-01", g:"M01", code:"UC-M01-01", name:"Dashboard ช่องโหลด (Fresh Loading Bays)", s:"2026-10-15", e:"2026-10-28", rs:"2026-10-29", re:"2026-11-04", w:20},
+  {id:"M01-02", g:"M01", code:"UC-M01-02", name:"บริหารคลัง In-process (รวมหน่วยงาน/ชื่อผู้เบิก)", s:"2026-10-22", e:"2026-11-04", rs:"2026-11-05", re:"2026-11-11", w:16},
+  {id:"M01-03", g:"M01", code:"UC-M01-03", name:"บริหารคลัง Frozen และ Make-to-Stock (รวมยอดมี/ขาดต่อออเดอร์)", s:"2026-10-29", e:"2026-11-11", rs:"2026-11-12", re:"2026-11-18", w:23},
+  {id:"M01-04", g:"M01", code:"UC-M01-04", name:"Dead Stock Report & Alert + ข้อมูลย้อนหลัง 3 ปี / ต้นทุนต่อรายการ", s:"2026-11-05", e:"2026-11-18", rs:"2026-11-19", re:"2026-11-25", w:19},
+  {id:"M01-R",  g:"M01", code:"RPT-M01-01–05", name:"Business Rules, Validation และรายงาน M01", s:"2026-11-12", e:"2026-11-25", rs:"2026-11-26", re:"2026-12-02", w:8},
+
+  {id:"M02-01", g:"M02", code:"UC-M02-01", name:"สร้าง Production Plan (รายวัน/สัปดาห์/เดือน)", s:"2026-10-22", e:"2026-11-11", rs:"2026-11-12", re:"2026-11-18", w:30},
+  {id:"M02-02", g:"M02", code:"UC-M02-02", name:"บันทึก Actual Production ระหว่าง Shift + Auto-counter", s:"2026-11-05", e:"2026-11-25", rs:"2026-11-26", re:"2026-12-02", w:28},
+  {id:"M02-03", g:"M02", code:"UC-M02-03", name:"Plan vs Actual Dashboard (ย้อนหลัง 3 ปี, ผลิตแล้ว/กำลังผลิต/ค้าง/ยังไม่ลงแผน)", s:"2026-11-19", e:"2026-12-09", rs:"2026-12-10", re:"2026-12-16", w:18},
+  {id:"M02-R",  g:"M02", code:"RPT-M02-01–04", name:"BOM Management, Business Rules, Validation และรายงาน M02", s:"2026-12-03", e:"2026-12-16", rs:"2026-12-17", re:"2026-12-23", w:10},
+
+  {id:"M09-01", g:"M09", code:"UC-M09-01", name:"สร้าง Sale Order พื้นฐาน + ฟิลด์วันที่ (Auto/เลือกเอง)", s:"2026-11-05", e:"2026-11-18", rs:"2026-11-19", re:"2026-11-25", w:21},
+  {id:"M09-01X",g:"M09", code:"UC-M09-01+", name:"สั่งสินค้าผ่านลิงก์ไลน์กลุ่ม + Dashboard ยอดสั่ง + Revise ตามน้ำหนักจริง + Stock On-hand", s:"2026-11-19", e:"2026-12-09", rs:"2026-12-10", re:"2026-12-16", w:31},
+  {id:"M09-02", g:"M09", code:"UC-M09-02", name:"Pick / Pack / Load ตาม SO", s:"2026-12-03", e:"2026-12-16", rs:"2026-12-17", re:"2026-12-23", w:18},
+  {id:"M09-03", g:"M09", code:"UC-M09-03", name:"ดูสรุปยอดขายตาม Item", s:"2026-12-10", e:"2026-12-23", rs:"2026-12-24", re:"2026-12-30", w:10},
+  {id:"M09-04", g:"M09", code:"UC-M09-04", name:"บริหารคิวรับสินค้า (Pickup Queue / Big Screen)", s:"2026-12-17", e:"2026-12-30", rs:"2026-12-31", re:"2027-01-06", w:16},
+  {id:"M09-05", g:"M09", code:"UC-M09-05", name:"บันทึก Trip + ค่าน้ำมันขนส่ง", s:"2026-12-24", e:"2027-01-06", rs:"2027-01-07", re:"2027-01-20", w:23},
+  {id:"M09-R",  g:"M09", code:"RPT-M09-01–06", name:"Business Rules, Validation และรายงาน M09", s:"2026-12-31", e:"2027-01-06", rs:"2027-01-07", re:"2027-01-20", w:8},
+
+  {id:"SIT", g:"X", code:"P4", name:"SIT & Integration Testing + Bug Fix รอบ 1", s:"2027-01-07", e:"2027-01-20", w:30},
+  {id:"UAT", g:"X", code:"P5", name:"UAT โดย Key User + Bug Fix รอบ 2", s:"2027-01-21", e:"2027-02-03", w:30},
+  {id:"TRN", g:"X", code:"P6", name:"Training + Data Migration", s:"2027-02-04", e:"2027-02-17", w:20},
+  {id:"GL",  g:"X", code:"P6", name:"Go-Live Cutover", s:"2027-02-18", e:"2027-02-24", w:10},
+  {id:"HC",  g:"X", code:"P6", name:"Hypercare 2 สัปดาห์", s:"2027-02-25", e:"2027-03-10", w:10}
+];
+
+const MILESTONES = [
+  {id:"MS-0",  name:"ลงนามสัญญา", d:"2026-09-15", cond:"ลงนามสัญญาจ้างพัฒนาระบบ Phase 1", pay:"งวด 1 · 30% (มัดจำ)"},
+  {id:"MS-1",  name:"FRS (Phase 1) Sign-off", d:"2026-09-09", cond:"ลูกค้าลงนามรับรอง FRS (Phase 1)"},
+  {id:"MS-2",  name:"Design Sign-off (ER + UX/UI)", d:"2026-09-30", cond:"อนุมัติ ER Diagram และ Mockup ครบทุกหน้าจอ"},
+  {id:"MS-3",  name:"M01 คลังสินค้า — Development Complete + Demo", d:"2026-11-25", was:"2026-11-11", cond:"Demo ครบ 4 Use Case พร้อม Business Rules/Reports บน Staging · สรุปผลตรวจ 2 ธ.ค. 2569", pay:"งวด 2 · 30% (ภายใน 7 วันหลังตรวจรับ M01)"},
+  {id:"MS-4",  name:"M02 ผลิต — Development Complete + Demo", d:"2026-12-16", was:"2026-12-02", cond:"Demo ครบ 3 Use Case + BOM พร้อม Reports บน Staging · สรุปผลตรวจ 23 ธ.ค. 2569"},
+  {id:"MS-5",  name:"M09 ขาย-ขนส่ง — Development Complete + Demo", d:"2027-01-06", was:"2026-12-23", cond:"Demo ครบ 5 Use Case (รวมสั่งสินค้าผ่านลิงก์ไลน์กลุ่ม) พร้อม Reports · สรุปผลตรวจ 20 ม.ค. 2570", pay:"งวด 3 · 30% (ภายใน 7 วันหลังตรวจรับ M02 และ M09)"},
+  {id:"MS-6",  name:"SIT Complete", d:"2027-01-20", was:"2027-01-06", cond:"ทดสอบ Integration 3 โมดูลผ่าน ไม่มี Defect Severity 1 ค้าง"},
+  {id:"MS-7",  name:"UAT Pass", d:"2027-02-03", was:"2027-01-20", cond:"ลูกค้าลงนามรับ UAT Report"},
+  {id:"MS-8",  name:"Training + Data Migration Complete", d:"2027-02-17", was:"2027-02-03", cond:"อบรมครบทุกฝ่าย นำเข้าข้อมูลตั้งต้นครบถ้วน"},
+  {id:"MS-9",  name:"Go-Live (Production)", d:"2027-02-24", was:"2027-02-10", cond:"ระบบใช้งานจริงครบ 3 โมดูล · เริ่มนับประกัน 6 เดือน"},
+  {id:"MS-10", name:"Hypercare Complete / Phase 1 Closure", d:"2027-03-10", was:"2027-02-24", cond:"จบ Hypercare ส่งมอบเอกสารครบทุกฉบับ", pay:"งวด 4 · 10% (ภายใน 7 วันหลังปิดโครงการ)"}
+];
+
+/* ============================ ส่วนคำนวณและแสดงผล ============================ */
+const TH_M = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const DAY = 864e5;
+const D = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (dt,n) => new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()+n);
+const diff = (a,b) => Math.round((b - a) / DAY);
+const fmt = (dt, yr=true) => `${dt.getDate()} ${TH_M[dt.getMonth()]}${yr ? " " + (dt.getFullYear()+543) : ""}`;
+const fmtR = (a,b) => {
+  if (a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth()) return `${a.getDate()} – ${fmt(b)}`;
+  if (a.getFullYear()===b.getFullYear()) return `${fmt(a,false)} – ${fmt(b)}`;
+  return `${fmt(a)} – ${fmt(b)}`;
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const P0 = D(PROJECT.start), P1 = D(PROJECT.end);
+const TOTAL_DAYS = diff(P0, P1) + 1;
+const WEEKS = Math.ceil(TOTAL_DAYS / 7);
+const groupOf = k => GROUPS.find(g => g.key === k);
+
+function today(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+function actual(t){ const p = PROGRESS[t.id] || {}; return Math.max(0, Math.min(100, Number(p.pct)||0)); }
+function plannedAt(t, dt){
+  const s = D(t.s), e = D(t.e);
+  if (dt < s) return 0;
+  if (dt > e) return 100;
+  return Math.round((diff(s, dt) + 1) / (diff(s, e) + 1) * 100);
+}
+function weighted(list, fn){
+  const W = list.reduce((a,t)=>a+t.w,0) || 1;
+  return list.reduce((a,t)=>a + fn(t)*t.w, 0) / W;
+}
+function status(t, dt){
+  const p = PROGRESS[t.id] || {}; const pct = actual(t);
+  if (p.accepted) return ["k-ok","ตรวจรับแล้ว"];
+  if (pct >= 100) {
+    if (t.rs) return dt > D(t.re) ? ["k-warn","รอสรุปผลตรวจ"] : ["k-rev","ส่งมอบแล้ว · รอตรวจรับ"];
+    return ["k-ok","เสร็จสิ้น"];
+  }
+  if (dt < D(t.s)) return ["k-idle","ยังไม่เริ่ม"];
+  if (dt > D(t.e)) return ["k-late","ล่าช้า"];
+  if (pct + 10 < plannedAt(t, dt)) return ["k-warn","เสี่ยงล่าช้า"];
+  return ["k-prog","กำลังดำเนินการ"];
+}
+const pill = ([k,l]) => `<span class="pill ${k}">${l}</span>`;
+function sprintAt(dt){ return SPRINTS.find(s => dt >= D(s.s) && dt <= D(s.e)); }
+function weekIndex(dt){ return Math.floor(diff(P0, dt) / 7) + 1; }
+
+let selWeek = 1;
+
+function renderKPIs(){
+  const T = today();
+  const dev = TASKS.filter(t => t.g !== "X");
+  const actAll = weighted(TASKS, actual), planAll = weighted(TASKS, t=>plannedAt(t,T));
+  const actDev = weighted(dev, actual), planDev = weighted(dev, t=>plannedAt(t,T));
+  const sp = sprintAt(T);
+  const goLive = D("2027-02-24");
+  const nextMs = MILESTONES.filter(m => !MS_DONE.includes(m.id) && D(m.d) >= T).sort((a,b)=>D(a.d)-D(b.d))[0];
+  const variance = actAll - planAll;
+  let spTxt, spSub;
+  if (T < P0) { spTxt = "ก่อน Sprint 1"; spSub = `เริ่มพัฒนาในอีก ${diff(T,P0)} วัน (${fmt(P0)})`; }
+  else if (T > P1) { spTxt = "ปิดโครงการ"; spSub = "สิ้นสุด Phase 1"; }
+  else { spTxt = `Sprint ${sp.no}`; spSub = `สัปดาห์ที่ ${weekIndex(T)} จาก ${WEEKS} · ${fmtR(D(sp.s),D(sp.e))}`; }
+  const bar = (a,p,c="var(--navy)") => `<div class="bar" title="แผน ${p.toFixed(0)}%"><i style="width:${a}%;background:${c}"></i><u style="left:calc(${p}% - 1px)"></u></div>`;
+  document.getElementById("kpis").innerHTML = `
+    <div class="kpi"><span class="eyebrow">ความคืบหน้ารวม Phase 1</span><span class="v">${actAll.toFixed(1)}%</span>${bar(actAll,planAll)}<span class="s">แผน ณ วันนี้ ${planAll.toFixed(1)}% · ${variance>=0?"เร็วกว่าแผน":"ช้ากว่าแผน"} ${Math.abs(variance).toFixed(1)}%</span></div>
+    <div class="kpi"><span class="eyebrow">งานพัฒนา (Dev)</span><span class="v">${actDev.toFixed(1)}%</span>${bar(actDev,planDev)}<span class="s">แผน ณ วันนี้ ${planDev.toFixed(1)}% · ถ่วงน้ำหนักตาม Story Point</span></div>
+    <div class="kpi"><span class="eyebrow">ช่วงปัจจุบัน</span><span class="v" style="font-family:var(--f-display)">${spTxt}</span><span class="s">${spSub}</span></div>
+    <div class="kpi"><span class="eyebrow">Milestone ถัดไป</span><span class="v" style="font-family:var(--f-display);font-size:1.15rem">${nextMs?esc(nextMs.id+" "+nextMs.name):"—"}</span><span class="s">${nextMs?`${fmt(D(nextMs.d))} · อีก ${diff(T,D(nextMs.d))} วัน`:""}</span></div>
+    <div class="kpi"><span class="eyebrow">Go-Live</span><span class="v">${diff(T,goLive) > 0 ? diff(T,goLive) : 0}<span style="font-size:.9rem;font-family:var(--f-body)"> วัน</span></span><span class="s">กำหนด ${fmt(goLive)}</span></div>`;
+  document.getElementById("mods").innerHTML = ["M01","M02","M09"].map(k=>{
+    const g = groupOf(k), list = TASKS.filter(t=>t.g===k);
+    const a = weighted(list, actual), p = weighted(list, t=>plannedAt(t,T));
+    const s = list.reduce((m,t)=>D(t.s)<m?D(t.s):m, D(list[0].s)), e = list.reduce((m,t)=>D(t.e)>m?D(t.e):m, D(list[0].e));
+    const done = list.filter(t => actual(t) >= 100).length;
+    return `<div class="mod"><h3><span class="dot" style="background:var(${g.color})"></span>${esc(g.name)}</h3>
+      ${bar(a,p,`var(${g.color})`)}
+      <div class="row"><span>ผลจริง <b class="num">${a.toFixed(0)}%</b> · แผน <span class="num">${p.toFixed(0)}%</span></span><span class="muted">ส่งมอบ ${done}/${list.length} หัวข้อ</span></div>
+      <div class="row muted"><span>ช่วงพัฒนา</span><span class="num">${fmtR(s,e)}</span></div></div>`;
+  }).join("");
+  document.getElementById("todayTxt").textContent = fmt(T);
+  document.getElementById("updatedTxt").textContent = fmt(D(LAST_UPDATED));
+}
+
+function renderWeek(){
+  const T = today();
+  const ws = addDays(P0, (selWeek-1)*7), we = addDays(ws, 6);
+  const sp = sprintAt(ws);
+  const isNow = T >= ws && T <= we;
+  document.getElementById("weekTitle").innerHTML = `สัปดาห์ที่ ${selWeek} · Sprint ${sp.no} <span class="muted num" style="font-family:var(--f-mono);font-weight:400;font-size:.85rem">${fmtR(ws,we)}</span> ${isNow?'<span class="pill k-prog">สัปดาห์นี้</span>':""}`;
+  document.getElementById("weekSel").value = String(selWeek);
+  const ov = (s,e) => D(s) <= we && D(e) >= ws;
+  const refDate = T;
+  const active = TASKS.filter(t => ov(t.s, t.e));
+  const deliver = TASKS.filter(t => t.rs && D(t.e) >= ws && D(t.e) <= we);
+  const review = TASKS.filter(t => t.rs && ov(t.rs, t.re));
+  const ms = MILESTONES.filter(m => D(m.d) >= ws && D(m.d) <= we);
+  const item = (t, extra="") => {
+    const g = groupOf(t.g), a = actual(t), pEnd = plannedAt(t, we);
+    return `<div class="witem"><div class="top"><div class="nm"><div class="code">${esc(t.code)}</div>${esc(t.name)}</div>${pill(status(t,refDate))}</div>
+      <div class="dual"><span>จริง</span><div class="bar"><i style="width:${a}%;background:var(${g.color})"></i><u style="left:calc(${pEnd}% - 1px)"></u></div><span class="num">${a}% / แผน ${pEnd}%</span></div>${extra}</div>`;
+  };
+  const w = WEEKLY[selWeek] || {};
+  const list = (arr) => arr && arr.length ? `<ul class="notes">${arr.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const report = (w.done||w.next||w.issues||w.customer)
+    ? `${w.done?`<div><b style="font-size:.85rem">ผลงานสัปดาห์นี้</b>${list(w.done)}</div>`:""}
+       ${w.next?`<div><b style="font-size:.85rem">แผนสัปดาห์ถัดไป</b>${list(w.next)}</div>`:""}
+       ${w.issues&&w.issues.length?`<div><b style="font-size:.85rem;color:var(--late)">ประเด็น / ความเสี่ยง</b>${list(w.issues)}</div>`:""}
+       ${w.customer&&w.customer.length?`<div><b style="font-size:.85rem">สิ่งที่ต้องการจากลูกค้า</b>${list(w.customer)}</div>`:""}`
+    : `<p class="empty">${T < ws ? "สัปดาห์นี้ยังไม่ถึงกำหนด" : "ยังไม่มีบันทึกรายงานของสัปดาห์นี้"}</p>`;
+  document.getElementById("weekBody").innerHTML = `
+    <div class="wcol"><h3>งานที่อยู่ในช่วงพัฒนา (${active.length})</h3>${active.length?active.map(t=>item(t)).join(""):'<p class="empty">ไม่มีงานพัฒนาในสัปดาห์นี้</p>'}</div>
+    <div class="wcol"><h3>ส่งมอบขึ้น Staging ให้ตรวจ (${deliver.length})</h3>${deliver.length?deliver.map(t=>`<div class="witem"><div class="top"><div class="nm"><div class="code">${esc(t.code)} · ส่งมอบ ${fmt(D(t.e))}</div>${esc(t.name)}</div>${pill(status(t,refDate))}</div></div>`).join(""):'<p class="empty">ไม่มีกำหนดส่งมอบ</p>'}
+      <h3 style="margin-top:8px">ลูกค้าตรวจสอบสัปดาห์นี้ (${review.length})</h3>${review.length?review.map(t=>`<div class="witem"><div class="top"><div class="nm"><div class="code">${esc(t.code)} · ตรวจ ${fmtR(D(t.rs),D(t.re))}</div>${esc(t.name)}</div><span class="pill k-rev">สรุปผล ${fmt(D(t.re),false)}</span></div></div>`).join(""):'<p class="empty">ไม่มีงานรอตรวจสอบ</p>'}
+      ${ms.length?`<h3 style="margin-top:8px">Milestone</h3>${ms.map(m=>`<div class="witem"><div class="top"><div class="nm"><div class="code">${m.id} · ${fmt(D(m.d))}</div>${esc(m.name)}</div>${m.pay?`<span class="tag">${esc(m.pay.split(" · ")[0])}</span>`:""}</div></div>`).join("")}`:""}</div>
+    <div class="wcol"><h3>รายงานจากทีมพัฒนา</h3>${report}${sp.note ? `<p class="empty">หมายเหตุ Sprint ${sp.no}: ${esc(sp.note)}</p>` : ""}</div>`;
+}
+
+function renderGantt(){
+  const T = today();
+  const pos = dt => diff(P0, dt) / TOTAL_DAYS * 100;
+  const wid = (s,e) => (diff(s,e)+1) / TOTAL_DAYS * 100;
+  const cur = sprintAt(T);
+  const spCols = SPRINTS.map(s => `${diff(D(s.s),D(s.e))+1}fr`).join(" ");
+  let h = `<div class="gridlines" style="grid-template-columns:repeat(${WEEKS},1fr)">${Array.from({length:WEEKS},(_,i)=>`<div class="${i%2===0?"sp":""}"></div>`).join("")}</div>`;
+  h += `<div class="grow ghead"><div class="glabel"><b>Sprint</b></div><div class="gtrack" style="grid-template-columns:${spCols}">${SPRINTS.map(s=>`<div class="gsprint ${cur&&cur.no===s.no?"cur":""}">S${s.no}<small>${D(s.s).getDate()} ${TH_M[D(s.s).getMonth()]} – ${D(s.e).getDate()} ${TH_M[D(s.e).getMonth()]}</small></div>`).join("")}</div></div>`;
+  h += `<div class="grow ghead"><div class="glabel muted">สัปดาห์</div><div class="gtrack" style="grid-template-columns:repeat(${WEEKS},1fr)">${Array.from({length:WEEKS},(_,i)=>`<div class="gweek">W${i+1}</div>`).join("")}</div></div>`;
+  GROUPS.forEach(g => {
+    h += `<div class="grow ggroup"><div class="glabel"><span class="dot" style="background:var(${g.color})"></span>${esc(g.name)}</div><div class="gtrack"></div></div>`;
+    TASKS.filter(t=>t.g===g.key).forEach(t => {
+      const s = D(t.s), e = D(t.e), a = actual(t);
+      let bars = `<div class="gbar" style="--c:var(${g.color});left:${pos(s)}%;width:${wid(s,e)}%" title="${esc(t.code)} · ${fmtR(s,e)} · ${a}%"><i style="width:${a}%"></i></div>`;
+      if (t.rs) bars += `<div class="grev" style="left:${pos(D(t.rs))}%;width:${wid(D(t.rs),D(t.re))}%" title="ลูกค้าตรวจสอบ ${fmtR(D(t.rs),D(t.re))}"></div>`;
+      h += `<div class="grow"><div class="glabel" title="${esc(t.name)}"><span><span class="num muted" style="font-size:.7rem">${esc(t.code)}</span> ${esc(t.name)}</span></div><div class="gtrack">${bars}</div></div>`;
+    });
+  });
+  const msIn = MILESTONES.filter(m => D(m.d) >= P0 && D(m.d) <= P1);
+  h += `<div class="grow ggroup"><div class="glabel">Milestones</div><div class="gtrack">${msIn.map(m=>`<div class="gms ${MS_DONE.includes(m.id)?"done":""}" style="left:${pos(D(m.d)) + 0.5/TOTAL_DAYS*100}%" title="${m.id} ${esc(m.name)} · ${fmt(D(m.d))}"></div>`).join("")}</div></div>`;
+  if (T >= P0 && T <= P1) h += `<div class="gtoday" style="--p:${(diff(P0,T)+0.5)/TOTAL_DAYS}"><b>วันนี้</b></div>`;
+  document.getElementById("gantt").innerHTML = h;
+}
+
+function renderSprints(){
+  const T = today();
+  document.getElementById("sprints").innerHTML = SPRINTS.map(sp => {
+    const s = D(sp.s), e = D(sp.e);
+    const tasks = TASKS.filter(t => D(t.s) <= e && D(t.e) >= s);
+    const due = TASKS.filter(t => D(t.e) >= s && D(t.e) <= e);
+    const ms = MILESTONES.filter(m => D(m.d) >= s && D(m.d) <= e);
+    const a = weighted(due.length?due:tasks, actual);
+    let st;
+    if (T < s) st = ["k-idle","ยังไม่เริ่ม"];
+    else if (T > e) st = a >= 100 ? ["k-ok","เสร็จสิ้น"] : ["k-late","มีงานค้าง"];
+    else st = ["k-prog","กำลังดำเนินการ"];
+    const isCur = T >= s && T <= e;
+    return `<article class="sp-card ${isCur?"cur":""}">
+      <div class="sp-top"><div><div class="sp-no">Sprint ${sp.no}</div><div class="sp-dates">${fmtR(s,e)} · ${Math.round((diff(s,e)+1)/7)} สัปดาห์</div></div>${pill(st)}</div>
+      <p class="sp-goal">${esc(sp.goal)}</p>
+      <div class="dual"><span>ส่งมอบ</span><div class="bar"><i style="width:${a}%"></i></div><span class="num">${a.toFixed(0)}%</span></div>
+      <ul class="sp-list">${due.map(t=>`<li><span><span class="dot" style="background:var(${groupOf(t.g).color})"></span>${esc(t.code)} ${esc(t.name)}</span>${pill(status(t,T))}</li>`).join("") || '<li><span class="muted">ไม่มีกำหนดส่งมอบใน Sprint นี้</span></li>'}</ul>
+      ${ms.length?`<div style="display:flex;flex-wrap:wrap;gap:6px">${ms.map(m=>`<span class="tag">${m.id} · ${fmt(D(m.d),false)}</span>`).join("")}</div>`:""}
+      ${sp.note?`<div class="muted" style="font-size:.8rem">${esc(sp.note)}</div>`:""}
+    </article>`;
+  }).join("");
+}
+
+function renderMS(){
+  const T = today();
+  const rows = MILESTONES.slice().sort((a,b)=>D(a.d)-D(b.d)).map(m => {
+    const done = MS_DONE.includes(m.id);
+    const st = done ? ["k-ok","บรรลุแล้ว"] : (T > D(m.d) ? ["k-late","เลยกำหนด"] : ["k-idle", `อีก ${diff(T,D(m.d))} วัน`]);
+    return `<tr><td class="num"><b>${m.id}</b></td><td>${esc(m.name)}<div class="muted" style="font-size:.8rem">${esc(m.cond)}</div></td>
+      <td class="num">${fmt(D(m.d))}${m.was?`<span class="was">เดิม ${fmt(D(m.was))}</span>`:""}</td>
+      <td>${m.pay?esc(m.pay):'<span class="muted">—</span>'}</td><td>${pill(st)}</td></tr>`;
+  }).join("");
+  document.getElementById("msTable").innerHTML = `<thead><tr><th>รหัส</th><th>Milestone / เงื่อนไขรับมอบ</th><th class="num">กำหนดวันที่</th><th>งวดชำระเงิน</th><th>สถานะ</th></tr></thead><tbody>${rows}</tbody>`;
+}
+
+function initWeekSel(){
+  const sel = document.getElementById("weekSel");
+  sel.innerHTML = Array.from({length:WEEKS},(_,i)=>{
+    const ws = addDays(P0, i*7), we = addDays(ws,6);
+    return `<option value="${i+1}">W${i+1} · ${fmtR(ws, we > P1 ? P1 : we)}</option>`;
+  }).join("");
+  const T = today();
+  selWeek = T < P0 ? 1 : (T > P1 ? WEEKS : weekIndex(T));
+  sel.addEventListener("change", () => { selWeek = Number(sel.value); renderWeek(); });
+  document.getElementById("prevW").addEventListener("click", () => { selWeek = Math.max(1, selWeek-1); renderWeek(); });
+  document.getElementById("nextW").addEventListener("click", () => { selWeek = Math.min(WEEKS, selWeek+1); renderWeek(); });
+  document.getElementById("thisW").addEventListener("click", () => { const T=today(); selWeek = T < P0 ? 1 : (T > P1 ? WEEKS : weekIndex(T)); renderWeek(); });
+}
+
+function renderAll(){ renderKPIs(); renderWeek(); renderGantt(); renderSprints(); renderMS(); }
+initWeekSel();
+renderAll();
+setInterval(() => { renderKPIs(); renderGantt(); renderSprints(); renderMS(); }, 60000);
+</script>
+
+</body>
+</html>
