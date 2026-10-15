@@ -162,12 +162,12 @@ footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);paddi
     <h1>Kasetchon ERP Platform — Phase 1</h1>
     <div class="meta">
       <span>ลูกค้า <b>บริษัท เกษตรชล 2559 จำกัด</b></span>
-      <span>ผู้พัฒนา <b>บริษัท เอ แอนด์ พี อินโนเวท จำกัด</b></span>
+      <span>ผู้พัฒนา <b>บริษัท เอ แอนด์ พี อินโนเวท เซอร์วิส จำกัด</b></span>
       <span>ขอบเขต <b>M01 คลังสินค้า · M02 ผลิต · M09 ขาย-ขนส่ง</b></span>
       <span>วันนี้ <b id="todayTxt" class="num">—</b></span>
       <span>อัปเดตข้อมูลล่าสุด <b id="updatedTxt" class="num">—</b></span>
     </div>
-    <div class="notice">เริ่มพัฒนา (Development) <b>15 ต.ค. 2569</b> เลื่อนจากแผนเดิม 1 ต.ค. 2569 จำนวน 14 วัน กำหนดการและ Milestone หลังจากนี้ทั้งหมดเลื่อนตาม 14 วัน โดยคงระยะเวลาแต่ละช่วงไว้เท่าเดิม แบ่งงานเป็น Sprint ละ 2 สัปดาห์ (พฤหัสบดี – พุธ)</div>
+    <div class="notice">กำหนดการตามสัญญาข้อ 6 · FRS Sign-off 2 – 4 ต.ค. 2569 · Kick-off 5 – 9 ต.ค. 2569 · เริ่มพัฒนา <b>15 ต.ค. 2569</b> · Go-Live <b>24 ก.พ. 2570</b> · ปิดโครงการ Phase 1 <b>10 มี.ค. 2570</b> · แบ่งงานเป็น Sprint ละ 2 สัปดาห์ (พฤหัสบดี – พุธ)</div>
   </header>
 
   <section aria-labelledby="h-sum">
@@ -212,13 +212,13 @@ footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);paddi
   </section>
 
   <section aria-labelledby="h-ms">
-    <div class="sec-head"><h2 id="h-ms">Milestone และงวดการชำระเงิน</h2><p>อ้างอิงสัญญาข้อ 4.8 และข้อ 6 ปรับวันตามวันเริ่มพัฒนาใหม่</p></div>
+    <div class="sec-head"><h2 id="h-ms">Milestone และงวดการชำระเงิน</h2><p>อ้างอิงสัญญาข้อ 4.8 และข้อ 6.2</p></div>
     <div class="tscroll"><table id="msTable"></table></div>
   </section>
 
   <footer>
-    <span>อ้างอิง: KSCERP-2026-001-FRS (Phase 1) v1.4 · สัญญาจ้างพัฒนาระบบ Phase 1 · Task Breakdown Phase 1</span>
-    <span>การเปลี่ยนแปลง Requirement หลัง FRS Sign-off ดำเนินการผ่านกระบวนการ Change Request ซึ่งอาจส่งผลต่อกำหนดการ · ระยะประกัน 6 เดือนนับจากวัน Go-Live</span>
+    <span>อ้างอิง: สัญญาว่าจ้างการเขียนและพัฒนาโปรแกรม Kasetchon ERP Platform — Phase 1 (ลงวันที่ 15 ก.ย. 2569) · FRS KSCERP-2026-001-FRS-Phase1 v1.4 · ใบเสนอราคา A&P-BU-20260911-001</span>
+    <span>การเปลี่ยนแปลง Requirement หลัง FRS Sign-off ดำเนินการผ่านกระบวนการ Change Request ซึ่งอาจส่งผลต่อกำหนดการ · ระยะประกัน 6 เดือนนับจากวัน Go-Live (24 ก.พ. 2570) · ผู้ว่าจ้างไม่แจ้งผลตรวจภายในระยะตรวจสอบ ถือว่ายอมรับงานหัวข้อนั้น (ข้อ 7.3)</span>
   </footer>
 </div>
 
@@ -230,16 +230,16 @@ footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);paddi
    3) MS_DONE       : รหัส Milestone ที่บรรลุแล้ว
    4) WEEKLY        : บันทึกรายสัปดาห์ (สัปดาห์ที่ 1 = 15–21 ต.ค. 2569)
    ============================================================ */
-const LAST_UPDATED = "2026-10-14";
+const LAST_UPDATED = "2026-10-15";
 
 const PROGRESS = {
-  "F":      {pct:0}, "M01-01":{pct:0}, "M01-02":{pct:0}, "M01-03":{pct:0}, "M01-04":{pct:0}, "M01-R":{pct:0},
+  "D":{pct:0}, "F":{pct:0}, "M01-01":{pct:0}, "M01-02":{pct:0}, "M01-03":{pct:0}, "M01-04":{pct:0}, "M01-05":{pct:0}, "M01-R":{pct:0},
   "M02-01": {pct:0}, "M02-02":{pct:0}, "M02-03":{pct:0}, "M02-R": {pct:0},
   "M09-01": {pct:0}, "M09-01X":{pct:0}, "M09-02":{pct:0}, "M09-03":{pct:0}, "M09-04":{pct:0}, "M09-05":{pct:0}, "M09-R":{pct:0},
   "SIT":{pct:0}, "UAT":{pct:0}, "TRN":{pct:0}, "GL":{pct:0}, "HC":{pct:0}
 };
 
-const MS_DONE = ["MS-0","MS-1","MS-2"];
+const MS_DONE = ["MS-0","MS-1","KO"];
 
 const WEEKLY = {
   // ตัวอย่างรูปแบบ:
@@ -250,9 +250,9 @@ const WEEKLY = {
 const PROJECT = {start:"2026-10-15", end:"2027-03-10"};
 
 const SPRINTS = [
-  {no:1,  s:"2026-10-15", e:"2026-10-28", goal:"วางโครงสร้างระบบ (Foundation) และเริ่ม M01 Dashboard ช่องโหลด"},
-  {no:2,  s:"2026-10-29", e:"2026-11-11", goal:"M01 คลัง In-process / Frozen และ M02 Production Plan"},
-  {no:3,  s:"2026-11-12", e:"2026-11-25", goal:"ปิดงานพัฒนา M01 (Dead Stock, Reports) · M02 บันทึก Actual · M09 Sale Order"},
+  {no:1,  s:"2026-10-15", e:"2026-10-28", goal:"เริ่ม Design (ER, UX/UI) คู่ขนาน · วางโครงสร้างระบบ (Foundation) · M01 Dashboard ช่องโหลด"},
+  {no:2,  s:"2026-10-29", e:"2026-11-11", goal:"Design Sign-off (4 พ.ย.) · M01 คลัง In-process / Frozen · M02 Production Plan"},
+  {no:3,  s:"2026-11-12", e:"2026-11-25", goal:"ปิดงานพัฒนา M01 (Dead Stock, อุณหภูมิห้องเย็น SCADA, Reports) · M02 บันทึก Actual · M09 Sale Order"},
   {no:4,  s:"2026-11-26", e:"2026-12-09", goal:"M02 Plan vs Actual Dashboard · M09 สั่งสินค้าผ่านลิงก์ไลน์กลุ่ม"},
   {no:5,  s:"2026-12-10", e:"2026-12-23", goal:"ปิดงานพัฒนา M02 (BOM, Reports) · M09 Pick/Pack/Load และสรุปยอดขาย"},
   {no:6,  s:"2026-12-24", e:"2027-01-06", goal:"ปิดงานพัฒนา M09 (คิวรับสินค้า, Trip, Reports)", note:"มีวันหยุดปีใหม่ 31 ธ.ค. – 1 ม.ค."},
@@ -264,7 +264,7 @@ const SPRINTS = [
 ];
 
 const GROUPS = [
-  {key:"F",   name:"Foundation", color:"--mx"},
+  {key:"F",   name:"Design & Foundation", color:"--mx"},
   {key:"M01", name:"M01 คลังสินค้า (Warehouse)", color:"--m01"},
   {key:"M02", name:"M02 ผลิต (Production)", color:"--m02"},
   {key:"M09", name:"M09 ขาย-ขนส่ง (Sales & Logistics)", color:"--m09"},
@@ -272,12 +272,14 @@ const GROUPS = [
 ];
 
 const TASKS = [
+  {id:"D", g:"F", code:"P3", name:"Design: System Architecture, ER Diagram, UX Wireframe + Hi-Fi Mockup (~10 หน้าจอ)", s:"2026-10-15", e:"2026-11-04", w:15},
   {id:"F", g:"F", code:"F-01–F-07", name:"Foundation: Project setup, CI/CD, Auth/RBAC, Design System, Master Data, Audit Trail, Import tool", s:"2026-10-15", e:"2026-10-28", w:44},
 
   {id:"M01-01", g:"M01", code:"UC-M01-01", name:"Dashboard ช่องโหลด (Fresh Loading Bays)", s:"2026-10-15", e:"2026-10-28", rs:"2026-10-29", re:"2026-11-04", w:20},
   {id:"M01-02", g:"M01", code:"UC-M01-02", name:"บริหารคลัง In-process (รวมหน่วยงาน/ชื่อผู้เบิก)", s:"2026-10-22", e:"2026-11-04", rs:"2026-11-05", re:"2026-11-11", w:16},
   {id:"M01-03", g:"M01", code:"UC-M01-03", name:"บริหารคลัง Frozen และ Make-to-Stock (รวมยอดมี/ขาดต่อออเดอร์)", s:"2026-10-29", e:"2026-11-11", rs:"2026-11-12", re:"2026-11-18", w:23},
   {id:"M01-04", g:"M01", code:"UC-M01-04", name:"Dead Stock Report & Alert + ข้อมูลย้อนหลัง 3 ปี / ต้นทุนต่อรายการ", s:"2026-11-05", e:"2026-11-18", rs:"2026-11-19", re:"2026-11-25", w:19},
+  {id:"M01-05", g:"M01", code:"UC-M01-05", name:"แสดงอุณหภูมิห้องเย็นจากระบบ SCADA (2 ห้อง)", s:"2026-11-12", e:"2026-11-25", rs:"2026-11-26", re:"2026-12-02", w:10},
   {id:"M01-R",  g:"M01", code:"RPT-M01-01–05", name:"Business Rules, Validation และรายงาน M01", s:"2026-11-12", e:"2026-11-25", rs:"2026-11-26", re:"2026-12-02", w:8},
 
   {id:"M02-01", g:"M02", code:"UC-M02-01", name:"สร้าง Production Plan (รายวัน/สัปดาห์/เดือน)", s:"2026-10-22", e:"2026-11-11", rs:"2026-11-12", re:"2026-11-18", w:30},
@@ -293,25 +295,26 @@ const TASKS = [
   {id:"M09-05", g:"M09", code:"UC-M09-05", name:"บันทึก Trip + ค่าน้ำมันขนส่ง", s:"2026-12-24", e:"2027-01-06", rs:"2027-01-07", re:"2027-01-20", w:23},
   {id:"M09-R",  g:"M09", code:"RPT-M09-01–06", name:"Business Rules, Validation และรายงาน M09", s:"2026-12-31", e:"2027-01-06", rs:"2027-01-07", re:"2027-01-20", w:8},
 
-  {id:"SIT", g:"X", code:"P4", name:"SIT & Integration Testing + Bug Fix รอบ 1", s:"2027-01-07", e:"2027-01-20", w:30},
-  {id:"UAT", g:"X", code:"P5", name:"UAT โดย Key User + Bug Fix รอบ 2", s:"2027-01-21", e:"2027-02-03", w:30},
-  {id:"TRN", g:"X", code:"P6", name:"Training + Data Migration", s:"2027-02-04", e:"2027-02-17", w:20},
-  {id:"GL",  g:"X", code:"P6", name:"Go-Live Cutover", s:"2027-02-18", e:"2027-02-24", w:10},
-  {id:"HC",  g:"X", code:"P6", name:"Hypercare 2 สัปดาห์", s:"2027-02-25", e:"2027-03-10", w:10}
+  {id:"SIT", g:"X", code:"P5", name:"SIT & Integration Testing + Bug Fix รอบ 1", s:"2027-01-07", e:"2027-01-20", w:30},
+  {id:"UAT", g:"X", code:"P6", name:"UAT โดย Key User + Bug Fix รอบ 2", s:"2027-01-21", e:"2027-02-03", w:30},
+  {id:"TRN", g:"X", code:"P7", name:"Training + Data Migration", s:"2027-02-04", e:"2027-02-17", w:20},
+  {id:"GL",  g:"X", code:"P7", name:"Go-Live Cutover", s:"2027-02-18", e:"2027-02-24", w:10},
+  {id:"HC",  g:"X", code:"P7", name:"Hypercare 2 สัปดาห์", s:"2027-02-25", e:"2027-03-10", w:10}
 ];
 
 const MILESTONES = [
-  {id:"MS-0",  name:"ลงนามสัญญา", d:"2026-09-15", cond:"ลงนามสัญญาจ้างพัฒนาระบบ Phase 1", pay:"งวด 1 · 30% (มัดจำ)"},
-  {id:"MS-1",  name:"FRS (Phase 1) Sign-off", d:"2026-09-09", cond:"ลูกค้าลงนามรับรอง FRS (Phase 1)"},
-  {id:"MS-2",  name:"Design Sign-off (ER + UX/UI)", d:"2026-09-30", cond:"อนุมัติ ER Diagram และ Mockup ครบทุกหน้าจอ"},
-  {id:"MS-3",  name:"M01 คลังสินค้า — Development Complete + Demo", d:"2026-11-25", was:"2026-11-11", cond:"Demo ครบ 4 Use Case พร้อม Business Rules/Reports บน Staging · สรุปผลตรวจ 2 ธ.ค. 2569", pay:"งวด 2 · 30% (ภายใน 7 วันหลังตรวจรับ M01)"},
-  {id:"MS-4",  name:"M02 ผลิต — Development Complete + Demo", d:"2026-12-16", was:"2026-12-02", cond:"Demo ครบ 3 Use Case + BOM พร้อม Reports บน Staging · สรุปผลตรวจ 23 ธ.ค. 2569"},
-  {id:"MS-5",  name:"M09 ขาย-ขนส่ง — Development Complete + Demo", d:"2027-01-06", was:"2026-12-23", cond:"Demo ครบ 5 Use Case (รวมสั่งสินค้าผ่านลิงก์ไลน์กลุ่ม) พร้อม Reports · สรุปผลตรวจ 20 ม.ค. 2570", pay:"งวด 3 · 30% (ภายใน 7 วันหลังตรวจรับ M02 และ M09)"},
-  {id:"MS-6",  name:"SIT Complete", d:"2027-01-20", was:"2027-01-06", cond:"ทดสอบ Integration 3 โมดูลผ่าน ไม่มี Defect Severity 1 ค้าง"},
-  {id:"MS-7",  name:"UAT Pass", d:"2027-02-03", was:"2027-01-20", cond:"ลูกค้าลงนามรับ UAT Report"},
-  {id:"MS-8",  name:"Training + Data Migration Complete", d:"2027-02-17", was:"2027-02-03", cond:"อบรมครบทุกฝ่าย นำเข้าข้อมูลตั้งต้นครบถ้วน"},
-  {id:"MS-9",  name:"Go-Live (Production)", d:"2027-02-24", was:"2027-02-10", cond:"ระบบใช้งานจริงครบ 3 โมดูล · เริ่มนับประกัน 6 เดือน"},
-  {id:"MS-10", name:"Hypercare Complete / Phase 1 Closure", d:"2027-03-10", was:"2027-02-24", cond:"จบ Hypercare ส่งมอบเอกสารครบทุกฉบับ", pay:"งวด 4 · 10% (ภายใน 7 วันหลังปิดโครงการ)"}
+  {id:"MS-0",  name:"ลงนามสัญญา", d:"2026-09-15", cond:"ลงนามสัญญาว่าจ้างการเขียนและพัฒนาโปรแกรม Phase 1", pay:"งวด 1 · 30% (มัดจำ ชำระภายในวันลงนามสัญญา)"},
+  {id:"MS-1",  name:"FRS (Phase 1) Sign-off", ds:"2026-10-02", d:"2026-10-04", cond:"ผู้ว่าจ้างตรวจสอบ Requirement, Timeline และราคา แล้วลงนามรับรอง FRS (Phase 1)"},
+  {id:"KO",    name:"Kick-off Meeting", ds:"2026-10-05", d:"2026-10-09", cond:"ทวน Requirement หลังผู้ว่าจ้างชำระเงินงวดที่ 1 และยืนยันขอบเขต Phase 1"},
+  {id:"MS-2",  name:"Design Sign-off (ER + UX/UI)", d:"2026-11-04", cond:"อนุมัติ ER Diagram และ Mockup ครบทุกหน้าจอ (~10 หน้าจอ)"},
+  {id:"MS-3",  name:"M01 คลังสินค้า — Development Complete + Internal Demo", d:"2026-11-25", cond:"Demo ครบ 5 Use Case พร้อม Business Rules/Reports บน Staging · สรุปผลตรวจ 2 ธ.ค. 2569", pay:"งวด 2 · 30% (ภายใน 7 วันหลังตรวจรับ M01)"},
+  {id:"MS-4",  name:"M02 ผลิต — Development Complete + Internal Demo", d:"2026-12-16", cond:"Demo ครบ 3 Use Case + BOM พร้อม Reports บน Staging · สรุปผลตรวจ 23 ธ.ค. 2569"},
+  {id:"MS-5",  name:"M09 ขาย-ขนส่ง — Development Complete + Internal Demo", d:"2027-01-06", cond:"Demo ครบ 5 Use Case (รวมสั่งสินค้าผ่านลิงก์ไลน์กลุ่ม) พร้อม Reports บน Staging · สรุปผลตรวจ 20 ม.ค. 2570", pay:"งวด 3 · 30% (ภายใน 7 วันหลังตรวจรับ M02 และ M09)"},
+  {id:"MS-6",  name:"SIT Complete", d:"2027-01-20", cond:"ทดสอบ Integration 3 โมดูลผ่านครบ ไม่มี Defect Severity 1 ค้าง"},
+  {id:"MS-7",  name:"UAT Pass", d:"2027-02-03", cond:"ผู้ว่าจ้างลงนามรับ UAT Report ผ่าน Acceptance Criteria"},
+  {id:"MS-8",  name:"Training + Data Migration Complete", d:"2027-02-17", cond:"อบรมผู้ใช้งานครบทุกฝ่าย นำเข้าข้อมูลตั้งต้นครบถ้วน"},
+  {id:"MS-9",  name:"Go-Live (Production)", d:"2027-02-24", cond:"ระบบใช้งานจริงครบ 3 โมดูล · เริ่มนับประกัน 6 เดือน (ถึง 24 ส.ค. 2570)"},
+  {id:"MS-10", name:"Hypercare Complete / Phase 1 Closure", d:"2027-03-10", cond:"จบ Hypercare 2 สัปดาห์ ส่งมอบเอกสารครบทุกฉบับ", pay:"งวด 4 · 10% (ภายใน 30 วันหลังตรวจรับงาน)"}
 ];
 
 /* ============================ ส่วนคำนวณและแสดงผล ============================ */
@@ -484,7 +487,7 @@ function renderMS(){
     const done = MS_DONE.includes(m.id);
     const st = done ? ["k-ok","บรรลุแล้ว"] : (T > D(m.d) ? ["k-late","เลยกำหนด"] : ["k-idle", `อีก ${diff(T,D(m.d))} วัน`]);
     return `<tr><td class="num"><b>${m.id}</b></td><td>${esc(m.name)}<div class="muted" style="font-size:.8rem">${esc(m.cond)}</div></td>
-      <td class="num">${fmt(D(m.d))}${m.was?`<span class="was">เดิม ${fmt(D(m.was))}</span>`:""}</td>
+      <td class="num">${m.ds?fmtR(D(m.ds),D(m.d)):fmt(D(m.d))}</td>
       <td>${m.pay?esc(m.pay):'<span class="muted">—</span>'}</td><td>${pill(st)}</td></tr>`;
   }).join("");
   document.getElementById("msTable").innerHTML = `<thead><tr><th>รหัส</th><th>Milestone / เงื่อนไขรับมอบ</th><th class="num">กำหนดวันที่</th><th>งวดชำระเงิน</th><th>สถานะ</th></tr></thead><tbody>${rows}</tbody>`;
